@@ -12,6 +12,7 @@ public class Main {
         for(String s : board.getPossibleWords()){
             System.out.println(s);
         }
+        
         scan.close();
     }
 }
