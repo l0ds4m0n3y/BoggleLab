@@ -1,5 +1,4 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -7,26 +6,25 @@ public class Dictionary {
   private static ArrayList<String> dictionary = new ArrayList<>();
 
   Dictionary() {
-    try {
-      load();
-    } catch (Exception e) {
-    }
+    load();
   }
 
-  public void load() throws FileNotFoundException {
-    File file = new File("Dictionary.txt");
+  public void load() {
+    try { 
+      File file = new File("Dictionary.txt");
     Scanner scan = new Scanner(file);
 
     while (scan.hasNextLine()) {
       dictionary.add(scan.nextLine());
     }
     scan.close();
+    } catch (Exception e) {}
   }
 
   public static Boolean isValidWord(String word, int start, int end) {
     int index = (start + end) / 2;
 
-    if (end < start)
+    if (end == start)
       return false;
 
     String wordAtIndex = dictionary.get(index);
@@ -39,7 +37,7 @@ public class Dictionary {
     }
   }
 
-  public static int getDictionarySize() {
+  public static int getSize() {
     return dictionary.size();
   }
 }

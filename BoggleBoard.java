@@ -1,68 +1,93 @@
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class BoggleBoard {
-  String[][] board;
-  LinkedList<String> possibleWords;
-  int boardSize;
+    String[][] board;
+    String[][] tempBoard;
+    LinkedList<String> possibleWords;
+    int boardSize;
 
-  BoggleBoard() throws FileNotFoundException{
-    load();
-    findAllPossibleWords();
-  }
+    BoggleBoard() {
+        load();
+        findAllPossibleWords();
+    }
 
-  public void load() throws FileNotFoundException{
-    File boardFile = new File("testBoard.txt");
-    Scanner fileScan = new Scanner(boardFile);
-    boardSize = fileScan.nextInt();
+    public void load() {
+        try {
+            File boardFile = new File("testBoard.txt");
+            Scanner fileScan = new Scanner(boardFile);
+            boardSize = fileScan.nextInt();
 
-    board = new String[boardSize][boardSize];
+            board = new String[boardSize][boardSize];
+            tempBoard = new String[boardSize][boardSize];
 
-    for(int row = 0; row < boardSize; row++){
-        for(int col = 0; col < boardSize; col++){
-            board[row][col] = fileScan.next();
+            for (int row = 0; row < boardSize; row++) {
+                for (int col = 0; col < boardSize; col++) {
+                    String letter = fileScan.next();
+                    board[row][col] = letter;
+                    tempBoard[row][col] = letter;
+                }
+            }
+            fileScan.close();
+        } catch (Exception e) {
         }
     }
-    fileScan.close();
-}
 
-private void findAllPossibleWords(){
-    possibleWords = new LinkedList<>();
-    for(int row = 0; row < boardSize; row++){
-        for(int col = 0; col < boardSize; col++){
-            LetterCell currenCell = new LetterCell(row, col, board[row][col]);
+    private void findAllPossibleWords() {
+        possibleWords = new LinkedList<>();
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                LetterCell currenCell = new LetterCell(row, col, tempBoard[row][col]);
+                createWordFromCell("", currenCell);
+            }
         }
     }
-}
 
-private void createWordFromCell(String[][] borad, String word, LetterCell cell){
-    word = "";
-    String[][] tempBoard = board.clone();
-    if(word.length() >= boardSize * boardSize)
-        return;
-    if(Dictionary.isValidWord(word, 0, Dictionary.getDictionarySize())){
-        possibleWords.add(word);
+    private void createWordFromCell(String word, LetterCell cell) {
+        int row = cell.getRow();
+        int col = cell.getCol();
+
+        if (row < 0 || row >= boardSize || col < 0 || col >= boardSize)
+            return;
+
         word += cell.getCharacter();
-        
-    }else{
-        word += cell.getCharacter();
-    }
-}
+        tempBoard[cell.getRow()][cell.getCol()] = "0";
 
-public void printBoard(){
-    for(int row = 0; row < boardSize; row++){
-        System.out.print("| ");
-        for(int col = 0; col < boardSize; col++){
-            System.out.print(board[row][col] + " ");
+        if (Dictionary.isValidWord(word, 0, Dictionary.getSize())){
+            possibleWords.add(word);
         }
-        System.out.println("|");
-    }
-  }
 
-public LinkedList<String> getPossibleWords() {
-      return possibleWords;
-  }
+        createWordFromCell(word, new LetterCell(row - 1, col + 1, tempBoard[row - 1][col + 1], cell)); 
+        // top right
+        createWordFromCell(word, new LetterCell(row - 1, col, tempBoard[row - 1][col], cell)); 
+        // left
+        createWordFromCell(word, new LetterCell(row - 1, col - 1, tempBoard[row - 1][col - 1], cell)); 
+        // top left
+        createWordFromCell(word, new LetterCell(row, col + 1, tempBoard[row][col + 1], cell)); 
+        // left
+        createWordFromCell(word, new LetterCell(row, col - 1, tempBoard[row][col - 1], cell)); 
+        // right
+        createWordFromCell(word, new LetterCell(row + 1, col + 1, tempBoard[row + 1][col + 1], cell)); 
+        // bottom right
+        createWordFromCell(word, new LetterCell(row + 1, col, tempBoard[row + 1][col], cell)); 
+        // bottom 
+        createWordFromCell(word, new LetterCell(row + 1, col - 1, tempBoard[row + 1][col], cell)); 
+        // bottom left
+    }
+
+    public void printBoard() {
+        for (int row = 0; row < boardSize; row++) {
+            System.out.print("| ");
+            for (int col = 0; col < boardSize; col++) {
+                System.out.print(board[row][col] + " ");
+            }
+            System.out.println("|");
+        }
+    }
+
+    public LinkedList<String> getPossibleWords() {
+        return possibleWords;
+    }
 
 }
