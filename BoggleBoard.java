@@ -1,5 +1,6 @@
 import java.io.File;
 import java.util.LinkedList;
+import java.util.Random;
 import java.util.Scanner;
 
 public class BoggleBoard {
@@ -11,6 +12,26 @@ public class BoggleBoard {
     BoggleBoard() {
         load();
         findAllPossibleWords();
+    }
+
+    public void randomBoard(){
+        board = new String[4][4];
+        Random rand = new Random();
+        try {
+            File diceFile = new File("Dice.txt");
+            Scanner scan = new Scanner(diceFile);
+            String ptr = "";
+
+            for(int row = 0; row < 4; row++){
+                for(int col = 0; col < 4; col++){
+                    for(int i = 0; i < rand.nextInt(6); i++){
+                        ptr = scan.next();
+                    }
+                    board[row][col] = ptr;
+                    scan.nextLine();
+                }
+            }
+        } catch (Exception e) {}
     }
 
     public void load() {
