@@ -3,7 +3,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class Dictionary {
-  private static ArrayList<String> dictionary = new ArrayList<>();
+  private ArrayList<String> dictionary = new ArrayList<>();
 
   Dictionary() {
     load();
@@ -22,11 +22,11 @@ public class Dictionary {
     }
   }
 
-  public static Boolean isValidWord(String word) {
+  public Boolean isValidWord(String word) {
     return isValidWord(word, 0, dictionary.size());
   }
 
-  public static Boolean isValidWord(String word, int start, int end) {
+  public Boolean isValidWord(String word, int start, int end) {
     if (end < start)
       return false;
 
@@ -42,7 +42,7 @@ public class Dictionary {
     }
   }
 
-  public static int getSize() {
+  public int getSize() {
     return dictionary.size();
   }
 }

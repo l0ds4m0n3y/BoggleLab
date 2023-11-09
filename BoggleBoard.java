@@ -1,4 +1,5 @@
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
 import java.util.Scanner;
@@ -8,37 +9,68 @@ public class BoggleBoard {
     Boolean[][] tempBoard;
     LinkedList<String> possibleWords;
     int boardSize;
+    int numDice;
+    ArrayList<Dice> diceArray;
+    Dictionary dictionary;
 
     BoggleBoard() {
+        dictionary = new Dictionary();
         load();
         findAllPossibleWords();
     }
 
-    //TODO
-    public void randomBoard(){
-        board = new String[4][4];
-        Random rand = new Random();
-        try {
-            File diceFile = new File("Dice.txt");
-            Scanner scan = new Scanner(diceFile);
-            String ptr = "";
+    BoggleBoard(int size) {
+        dictionary = new Dictionary();
+        randomBoard(size);
+        findAllPossibleWords();
+    }
 
-            for(int row = 0; row < 4; row++){
-                for(int col = 0; col < 4; col++){
-                    for(int i = 0; i < rand.nextInt(6); i++){
-                        ptr = scan.next();
+    public void loadDice() {
+        diceArray = new ArrayList<>();
+        try {
+            Scanner diceScanner = new Scanner(new File("Dice.txt"));
+            while (diceScanner.hasNext()) {
+                String diceValues = diceScanner.nextLine();
+                Scanner lineScanner = new Scanner(diceValues);
+                int size = 0;
+                for (int i = 0; i < diceValues.length(); i++) {
+                    if (diceValues.charAt(i) != ' ') {
+                        size++;
                     }
-                    board[row][col] = ptr;
-                    scan.nextLine();
                 }
+
+                if (diceValues.contains("Qu"))
+                    size--;
+
+                diceArray.add(new Dice(size, diceValues));
+                lineScanner.close();
             }
-            scan.close();
-        } catch (Exception e) {}
+            diceScanner.close();
+        } catch (Exception e) {
+        }
+    }
+
+    public void randomBoard(int size) {
+        loadDice();
+        boardSize = size;
+        int die = 0;
+        board = new String[boardSize][boardSize];
+        tempBoard = new Boolean[boardSize][boardSize];
+        for (int row = 0; row < boardSize; row++) {
+            for (int col = 0; col < boardSize; col++) {
+                if (die >= diceArray.size())
+                    die = 0;
+                board[row][col] = diceArray.get(die).roll();
+                tempBoard[row][col] = false;
+                die++;
+            }
+        }
+
     }
 
     public void load() {
         try {
-            File boardFile = new File("testBoard.txt");
+            File boardFile = new File("testBoard.txt"); // TODO change to Board.txt
             Scanner fileScan = new Scanner(boardFile);
             boardSize = fileScan.nextInt();
 
@@ -61,12 +93,14 @@ public class BoggleBoard {
         possibleWords = new LinkedList<>();
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
+
                 createWordFromCell("", row, col);
                 for (int row2 = 0; row2 < boardSize; row2++) {
                     for (int col2 = 0; col2 < boardSize; col2++) {
                         tempBoard[row2][col2] = false;
                     }
                 }
+
             }
         }
     }
@@ -81,7 +115,7 @@ public class BoggleBoard {
         word += board[row][col].toLowerCase();
         tempBoard[row][col] = true;
 
-        if (word.length() > 2 && Dictionary.isValidWord(word)) {
+        if (word.length() > 2 && word.length() < 29 && dictionary.isValidWord(word)) { // 28 is the longest word
             possibleWords.add(word);
         }
 
@@ -117,6 +151,14 @@ public class BoggleBoard {
 
     public LinkedList<String> getPossibleWords() {
         return possibleWords;
+    }
+
+    public Dictionary getDictionary() {
+        return dictionary;
+    }
+
+    public String[][] getBoard() {
+      return board;
     }
 
 }

@@ -1,21 +1,27 @@
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-        // Scanner scan = new Scanner(System.in);
-        // BoggleBoard board;
+        Scanner scan = new Scanner(System.in);
+        BoggleBoard board = new BoggleBoard(4); //TODO this will be used in the GUI
+        board.printBoard();
+
+        LinkedList<String> answers = board.getPossibleWords();
+        for(String s : answers){
+            System.out.println(s);
+        }
 
         // System.out.println("Loading...");
-        // new Dictionary();
-        // board = new BoggleBoard();
         // board.printBoard();
         // LinkedList<String> answers = board.getPossibleWords();
         // System.out.print("Enter word: ");
 
         // while (true) {
         //     boolean wasAnswer = false;
-        //     String input = scan.nextLine();
+        //     String input = scan.nextLine().trim();
         //     if (input.equals("EXIT"))
         //         break;
 
@@ -28,7 +34,7 @@ public class Main {
         //         }
         //     }
 
-        //     if (Dictionary.isValidWord(input) && !wasAnswer) {
+        //     if (board.getDictionary().isValidWord(input) && !wasAnswer) {
         //         System.out.println(input + " is a word, but is not in the board or was already answered");
         //     } else if (!wasAnswer) {
         //         System.out.println(input + " is not a word");
@@ -40,6 +46,6 @@ public class Main {
 
         // scan.close();
 
-        new BoogleGame();
+        //new BoogleGame();
     }
 }
