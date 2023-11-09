@@ -30,7 +30,8 @@ public class BoggleBoard {
                 }
             }
             fileScan.close();
-        } catch (Exception e) {}
+        } catch (Exception e) {
+        }
     }
 
     private void findAllPossibleWords() {
@@ -50,36 +51,35 @@ public class BoggleBoard {
     private void createWordFromCell(String word, int row, int col) {
         if (row < 0 || row >= boardSize || col < 0 || col >= boardSize)
             return;
-        
-        if(tempBoard[row][col])
+
+        if (tempBoard[row][col])
             return;
 
-        word += board[row][col];
+        word += board[row][col].toLowerCase();
         tempBoard[row][col] = true;
 
-        if (Dictionary.isValidWord(word, 0, Dictionary.getSize())){
+        if (word.length() > 2 && Dictionary.isValidWord(word)) {
             possibleWords.add(word);
         }
 
-        if(word.length() != boardSize * boardSize){
-            createWordFromCell(word, row - 1, col + 1); 
-            // top right
-            createWordFromCell(word, row - 1, col); 
-            // left
-            createWordFromCell(word, row - 1, col - 1); 
-            // top left
-            createWordFromCell(word, row, col + 1); 
-            // left
-            createWordFromCell(word, row, col - 1); 
-            // right
-            createWordFromCell(word, row + 1, col + 1); 
-            // bottom right
-            createWordFromCell(word, row + 1, col); 
-            // bottom 
-            createWordFromCell(word, row + 1, col - 1); 
-            // bottom left
-        }
-        return;
+        createWordFromCell(word, row - 1, col + 1);
+        // top right
+        createWordFromCell(word, row - 1, col);
+        // left
+        createWordFromCell(word, row - 1, col - 1);
+        // top left
+        createWordFromCell(word, row, col + 1);
+        // left
+        createWordFromCell(word, row, col - 1);
+        // right
+        createWordFromCell(word, row + 1, col + 1);
+        // bottom right
+        createWordFromCell(word, row + 1, col);
+        // bottom
+        createWordFromCell(word, row + 1, col - 1);
+        // bottom left
+
+        tempBoard[row][col] = false;
     }
 
     public void printBoard() {
