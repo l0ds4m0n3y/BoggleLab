@@ -14,6 +14,7 @@ public class BoggleBoard {
         findAllPossibleWords();
     }
 
+    //TODO
     public void randomBoard(){
         board = new String[4][4];
         Random rand = new Random();
@@ -31,6 +32,7 @@ public class BoggleBoard {
                     scan.nextLine();
                 }
             }
+            scan.close();
         } catch (Exception e) {}
     }
 
