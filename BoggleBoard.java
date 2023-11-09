@@ -6,7 +6,7 @@ import java.util.Scanner;
 
 public class BoggleBoard {
     String[][] board;
-    Boolean[][] tempBoard;
+    Boolean[][] visitedBoard;
     LinkedList<String> possibleWords;
     int boardSize;
     int numDice;
@@ -55,13 +55,13 @@ public class BoggleBoard {
         boardSize = size;
         int die = 0;
         board = new String[boardSize][boardSize];
-        tempBoard = new Boolean[boardSize][boardSize];
+        visitedBoard = new Boolean[boardSize][boardSize];
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 if (die >= diceArray.size())
                     die = 0;
                 board[row][col] = diceArray.get(die).roll();
-                tempBoard[row][col] = false;
+                visitedBoard[row][col] = false;
                 die++;
             }
         }
@@ -75,13 +75,13 @@ public class BoggleBoard {
             boardSize = fileScan.nextInt();
 
             board = new String[boardSize][boardSize];
-            tempBoard = new Boolean[boardSize][boardSize];
+            visitedBoard = new Boolean[boardSize][boardSize];
 
             for (int row = 0; row < boardSize; row++) {
                 for (int col = 0; col < boardSize; col++) {
                     String letter = fileScan.next();
                     board[row][col] = letter;
-                    tempBoard[row][col] = false;
+                    visitedBoard[row][col] = false;
                 }
             }
             fileScan.close();
@@ -97,7 +97,7 @@ public class BoggleBoard {
                 createWordFromCell("", row, col);
                 for (int row2 = 0; row2 < boardSize; row2++) {
                     for (int col2 = 0; col2 < boardSize; col2++) {
-                        tempBoard[row2][col2] = false;
+                        visitedBoard[row2][col2] = false;
                     }
                 }
 
@@ -109,11 +109,11 @@ public class BoggleBoard {
         if (row < 0 || row >= boardSize || col < 0 || col >= boardSize)
             return;
 
-        if (tempBoard[row][col])
+        if (visitedBoard[row][col])
             return;
 
         word += board[row][col].toLowerCase();
-        tempBoard[row][col] = true;
+        visitedBoard[row][col] = true;
 
         if (word.length() > 2 && word.length() < 29 && dictionary.isValidWord(word)) { // 28 is the longest word
             possibleWords.add(word);
@@ -136,7 +136,7 @@ public class BoggleBoard {
         createWordFromCell(word, row + 1, col - 1);
         // bottom left
 
-        tempBoard[row][col] = false;
+        visitedBoard[row][col] = false;
     }
 
     public void printBoard() {
