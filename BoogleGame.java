@@ -15,17 +15,18 @@ import javax.swing.JTextField;
 
 public class BoogleGame extends JFrame implements ActionListener {
   private final int HEIGHT = 500;
-  private final int WIDTH = 750;
+  private final int WIDTH = 500;
   private final int BUTTON_WIDTH = 75;
   private JPanel boardPanel;
   private JPanel topPanel;
   private JButton submitButton = new JButton("Submit");
+  private JButton tryAgain = new JButton("New");
   private JProgressBar wordsBar;
   private JTextField inputField;
   private JTextArea wordsSubmittedArea;
   private JScrollPane scrollableArea; 
   private BoggleBoard board;
-  private String[] messages = {"First blood", "nice!", "double kill", "triple kill", "Quadra kill", "PENTAKILL", "Killing spree", "Rampage", "Dominating", "Unstoppable", "Godlike", "Legendary"};
+  private String[] messages = {"First Blood", "Nice", "Double Kill", "Triple Kill", "Quadra Kill", "PENTAKILL", "HEXAKILL", "Killing spree", "Rampage", "Dominating", "Unstoppable", "Godlike", "Legendary"};
   private int messagePtr = 0;
   private Color[] colorArray = {Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.BLUE, new Color(238,130,238)};
   private int colorPtr = 0;
@@ -41,7 +42,7 @@ public class BoogleGame extends JFrame implements ActionListener {
 
     // inputField
     inputField = new JTextField();
-    inputField.setPreferredSize(new Dimension(WIDTH - BUTTON_WIDTH - 30, 30));
+    inputField.setPreferredSize(new Dimension(WIDTH - BUTTON_WIDTH * 2 - 30 , 30));
     inputField.setSize(getPreferredSize());
     inputField.addActionListener(this);
 
@@ -50,15 +51,22 @@ public class BoogleGame extends JFrame implements ActionListener {
     submitButton.setSize(getPreferredSize());
     submitButton.addActionListener(this);
 
+    //new game button
+    tryAgain.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
+    tryAgain.setSize(getPreferredSize());
+    tryAgain.addActionListener(this);
+
     // Top Panel
     topPanel = new JPanel();
     topPanel.setPreferredSize(new Dimension(WIDTH, 35));
     topPanel.setSize(getPreferredSize());
     topPanel.add(inputField);
     topPanel.add(submitButton);
+    topPanel.add(tryAgain);
 
     // BoardPanel //TODO make it visible
     boardPanel = new JPanel();
+    boardPanel.setBackground(Color.BLACK);
 
     // words submitted field
     wordsSubmittedArea = new JTextArea();
