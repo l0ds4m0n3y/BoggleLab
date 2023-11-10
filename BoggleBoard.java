@@ -58,8 +58,11 @@ public class BoggleBoard {
         visitedBoard = new Boolean[boardSize][boardSize];
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
+                
+                // if there are not dice, go back!
                 if (die >= diceArray.size())
                     die = 0;
+
                 board[row][col] = diceArray.get(die).roll();
                 visitedBoard[row][col] = false;
                 die++;
@@ -70,7 +73,7 @@ public class BoggleBoard {
 
     public void load() {
         try {
-            File boardFile = new File("testBoard.txt"); // TODO change to Board.txt
+            File boardFile = new File("Board.txt"); // TODO change to Board.txt
             Scanner fileScan = new Scanner(boardFile);
             boardSize = fileScan.nextInt();
 
@@ -103,6 +106,17 @@ public class BoggleBoard {
 
             }
         }
+        removeDuplicates();
+    }
+
+    public void removeDuplicates() {
+        LinkedList<String> newList = new LinkedList<>();
+        for (String element : possibleWords) {
+            if (!newList.contains(element)) {
+                newList.add(element);
+            }
+        }
+        possibleWords = newList;
     }
 
     private void createWordFromCell(String word, int row, int col) {
@@ -157,8 +171,21 @@ public class BoggleBoard {
         return dictionary;
     }
 
+    public boolean isInDictionary(String word){
+        return dictionary.isValidWord(word);
+    }
+
     public String[][] getBoard() {
       return board;
     }
 
+    public Boolean hasWord(String word){
+        for(String s : possibleWords){
+            if(word.equals(s)){
+                possibleWords.remove(s);
+                return true;
+            }
+        }
+        return false;
+    }
 }
