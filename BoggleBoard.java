@@ -1,7 +1,6 @@
 import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.Random;
 import java.util.Scanner;
 
 public class BoggleBoard {
@@ -17,6 +16,7 @@ public class BoggleBoard {
         dictionary = new Dictionary();
         load();
         findAllPossibleWords();
+        printBoard();
     }
 
     BoggleBoard(int size) {

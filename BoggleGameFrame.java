@@ -13,36 +13,35 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-public class BoogleGame extends JFrame implements ActionListener {
+public class BoggleGameFrame extends JFrame implements ActionListener {
   private final int HEIGHT = 500;
   private final int WIDTH = 500;
   private final int BUTTON_WIDTH = 75;
   private JPanel boardPanel;
   private JPanel topPanel;
   private JButton submitButton = new JButton("Submit");
-  private JButton tryAgain = new JButton("New");
   private JProgressBar wordsBar;
   private JTextField inputField;
   private JTextArea wordsSubmittedArea;
   private JScrollPane scrollableArea; 
   private BoggleBoard board;
-  private String[] messages = {"First Blood", "Nice", "Double Kill", "Triple Kill", "Quadra Kill", "PENTAKILL", "HEXAKILL", "Killing spree", "Rampage", "Dominating", "Unstoppable", "Godlike", "Legendary"};
+  private String[] messages = {"First blood", "nice!", "double kill", "triple kill", "Quadra kill", "PENTAKILL", "Killing spree", "Rampage", "Dominating", "Unstoppable", "Godlike", "Legendary"};
   private int messagePtr = 0;
   private Color[] colorArray = {Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.BLUE, new Color(238,130,238)};
   private int colorPtr = 0;
 
-  BoogleGame() {
+  BoggleGameFrame() {
     super("Boogle!");
     setLayout(new BorderLayout(5, 5));
     board = new BoggleBoard();
 
-    for(String s : board.getPossibleWords()){
-            System.out.println(s);
-        }
+    // for(String s : board.getPossibleWords()){
+    //         System.out.println(s);
+    //     }
 
     // inputField
     inputField = new JTextField();
-    inputField.setPreferredSize(new Dimension(WIDTH - BUTTON_WIDTH * 2 - 30 , 30));
+    inputField.setPreferredSize(new Dimension(WIDTH - BUTTON_WIDTH - 30, 30));
     inputField.setSize(getPreferredSize());
     inputField.addActionListener(this);
 
@@ -51,22 +50,18 @@ public class BoogleGame extends JFrame implements ActionListener {
     submitButton.setSize(getPreferredSize());
     submitButton.addActionListener(this);
 
-    //new game button
-    tryAgain.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
-    tryAgain.setSize(getPreferredSize());
-    tryAgain.addActionListener(this);
-
     // Top Panel
     topPanel = new JPanel();
     topPanel.setPreferredSize(new Dimension(WIDTH, 35));
     topPanel.setSize(getPreferredSize());
     topPanel.add(inputField);
     topPanel.add(submitButton);
-    topPanel.add(tryAgain);
 
-    // BoardPanel //TODO make it visible
+    // BoardPanel
     boardPanel = new JPanel();
+    boardPanel.setLayout(new BorderLayout(10,10));
     boardPanel.setBackground(Color.BLACK);
+    boardPanel.add(new PanelForBoard(board.getBoard()), BorderLayout.CENTER);
 
     // words submitted field
     wordsSubmittedArea = new JTextArea();
@@ -93,9 +88,10 @@ public class BoogleGame extends JFrame implements ActionListener {
     setVisible(true);
     setResizable(false);
   }
-
+  
   @Override
   public void actionPerformed(ActionEvent e) {
+    //inputField
     if (e.getSource() == inputField) {
 
       String answer = inputField.getText().trim();
@@ -104,7 +100,6 @@ public class BoogleGame extends JFrame implements ActionListener {
       if (board.hasWord(answer)) {
         wordsSubmittedArea.append(answer + "\n");
         wordsBar.setValue(wordsBar.getValue() + 1);
-
         
         if(messagePtr == messages.length) 
           messagePtr--;
@@ -124,11 +119,11 @@ public class BoogleGame extends JFrame implements ActionListener {
 
       } else if (board.isInDictionary(answer)) {
 
-        wordsBar.setString("Valid but no");
+        wordsBar.setString("Valid word but not in board/was answered");
         if(messagePtr != 0) 
           messagePtr = 1;
 
-      } else {
+      } else if (!answer.equals(null)){
 
         wordsBar.setString("not a word");
         if(messagePtr != 0)   
@@ -141,13 +136,14 @@ public class BoogleGame extends JFrame implements ActionListener {
         wordsBar.setString("ACE");
       }
 
+    // submitButton
     } else if (e.getSource() == submitButton) {
 
         wordsSubmittedArea.append("-MISSED WORDS-\n");
         for (String s : board.getPossibleWords()) {
           wordsSubmittedArea.append(s + "\n");
         }
-
+      
     }
   }
 }
