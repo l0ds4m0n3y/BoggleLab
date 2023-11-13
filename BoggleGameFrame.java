@@ -19,7 +19,8 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
   private final int BUTTON_WIDTH = 75;
   private JPanel boardPanel;
   private JPanel topPanel;
-  private JButton submitButton = new JButton("Submit");
+  private JButton findMissingButton = new JButton("End");
+  private JButton newGameButton = new JButton("New");
   private JProgressBar wordsBar;
   private JTextField inputField;
   private JTextArea wordsSubmittedArea;
@@ -29,6 +30,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
   private int messagePtr = 0;
   private Color[] colorArray = {Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.BLUE, new Color(238,130,238)};
   private int colorPtr = 0;
+  private PanelForBoard panelGraphic;
 
   BoggleGameFrame() {
     super("Boogle!");
@@ -46,22 +48,28 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
     inputField.addActionListener(this);
 
     // SubmitButton
-    submitButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
-    submitButton.setSize(getPreferredSize());
-    submitButton.addActionListener(this);
+    findMissingButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
+    findMissingButton.setSize(getPreferredSize());
+    findMissingButton.addActionListener(this);
+
+    //newGameBUtton
+    newGameButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
+    newGameButton.setSize(getPreferredSize());
+    newGameButton.addActionListener(this);
 
     // Top Panel
     topPanel = new JPanel();
     topPanel.setPreferredSize(new Dimension(WIDTH, 35));
     topPanel.setSize(getPreferredSize());
     topPanel.add(inputField);
-    topPanel.add(submitButton);
+    topPanel.add(findMissingButton);
 
     // BoardPanel
+    panelGraphic = new PanelForBoard(board.getBoard());
     boardPanel = new JPanel();
     boardPanel.setLayout(new BorderLayout(10,10));
     boardPanel.setBackground(Color.BLACK);
-    boardPanel.add(new PanelForBoard(board.getBoard()), BorderLayout.CENTER);
+    boardPanel.add(panelGraphic, BorderLayout.CENTER);
 
     // words submitted field
     wordsSubmittedArea = new JTextArea();
@@ -82,12 +90,13 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
     add(wordsBar, BorderLayout.SOUTH);
 
     setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-    setLocationRelativeTo(null);
+    //setLocationRelativeTo(null);
     setPreferredSize(new Dimension(WIDTH, HEIGHT));
     setSize(getPreferredSize());
     setVisible(true);
     setResizable(false);
   }
+
   
   @Override
   public void actionPerformed(ActionEvent e) {
@@ -137,13 +146,29 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
       }
 
     // submitButton
-    } else if (e.getSource() == submitButton) {
+    } else if (e.getSource() == findMissingButton) {
 
-        wordsSubmittedArea.append("-MISSED WORDS-\n");
+        wordsSubmittedArea.append("-POSSIBLE WORDS-\n");
         for (String s : board.getPossibleWords()) {
           wordsSubmittedArea.append(s + "\n");
         }
+
+        topPanel.remove(findMissingButton);
+        topPanel.add(newGameButton);
+        revalidate();
+        repaint();
       
+    } else if (e.getSource() == newGameButton){
+        board = new BoggleBoard(4);
+        wordsBar.setValue(0);
+        wordsBar.setMaximum(board.getPossibleWords().size());
+        wordsSubmittedArea.setText("");
+        topPanel.remove(newGameButton);
+        topPanel.add(findMissingButton);
+        panelGraphic.setBoard(board.getBoard());
+        panelGraphic.paint();
+        boardPanel.revalidate();
+        boardPanel.repaint();
     }
   }
 }
