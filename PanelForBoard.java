@@ -13,8 +13,8 @@ public class PanelForBoard extends JPanel{
     private final int WIDTH = 300;
     
     PanelForBoard(String[][] board){
-      boardCells = new JLabel[board.length][board[0].length];
       this.board = board;
+      boardCells = new JLabel[board.length][board[0].length];
       setPreferredSize(new Dimension(WIDTH, WIDTH));
       setSize(getPreferredSize());
       setBackground(Color.WHITE);

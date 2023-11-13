@@ -4,7 +4,6 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -19,7 +18,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
   private final int BUTTON_WIDTH = 75;
   private JPanel boardPanel;
   private JPanel topPanel;
-  private JButton findMissingButton = new JButton("End");
+  private JButton SolveButton = new JButton("Solve");
   private JButton newGameButton = new JButton("New");
   private JProgressBar wordsBar;
   private JTextField inputField;
@@ -48,9 +47,9 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
     inputField.addActionListener(this);
 
     // SubmitButton
-    findMissingButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
-    findMissingButton.setSize(getPreferredSize());
-    findMissingButton.addActionListener(this);
+    SolveButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
+    SolveButton.setSize(getPreferredSize());
+    SolveButton.addActionListener(this);
 
     //newGameBUtton
     newGameButton.setPreferredSize(new Dimension(BUTTON_WIDTH, 30));
@@ -62,7 +61,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
     topPanel.setPreferredSize(new Dimension(WIDTH, 35));
     topPanel.setSize(getPreferredSize());
     topPanel.add(inputField);
-    topPanel.add(findMissingButton);
+    topPanel.add(SolveButton);
 
     // BoardPanel
     panelGraphic = new PanelForBoard(board.getBoard());
@@ -146,14 +145,14 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
       }
 
     // submitButton
-    } else if (e.getSource() == findMissingButton) {
+    } else if (e.getSource() == SolveButton) {
 
         wordsSubmittedArea.append("-POSSIBLE WORDS-\n");
         for (String s : board.getPossibleWords()) {
           wordsSubmittedArea.append(s + "\n");
         }
 
-        topPanel.remove(findMissingButton);
+        topPanel.remove(SolveButton);
         topPanel.add(newGameButton);
         revalidate();
         repaint();
@@ -164,7 +163,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
         wordsBar.setMaximum(board.getPossibleWords().size());
         wordsSubmittedArea.setText("");
         topPanel.remove(newGameButton);
-        topPanel.add(findMissingButton);
+        topPanel.add(SolveButton);
         panelGraphic.setBoard(board.getBoard());
         panelGraphic.paint();
         boardPanel.revalidate();
