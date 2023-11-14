@@ -29,16 +29,13 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
   private int messagePtr = 0;
   private Color[] colorArray = {Color.red, Color.orange, Color.yellow, Color.green, Color.blue, Color.BLUE, new Color(238,130,238)};
   private int colorPtr = 0;
+  private int score = 0;
   private PanelForBoard panelGraphic;
 
   BoggleGameFrame() {
     super("Boogle!");
     setLayout(new BorderLayout(5, 5));
     board = new BoggleBoard();
-
-    // for(String s : board.getPossibleWords()){
-    //         System.out.println(s);
-    //     }
 
     // inputField
     inputField = new JTextField();
@@ -72,7 +69,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
 
     // words submitted field
     wordsSubmittedArea = new JTextArea();
-    wordsSubmittedArea.setPreferredSize(new Dimension(125, HEIGHT));
+    wordsSubmittedArea.setPreferredSize(new Dimension(125, 10000));
     wordsSubmittedArea.setEditable(false);
     scrollableArea = new JScrollPane(wordsSubmittedArea, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -108,6 +105,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
       if (board.hasWord(answer)) {
         wordsSubmittedArea.append(answer + "\n");
         wordsBar.setValue(wordsBar.getValue() + 1);
+        score += answer.length();
         
         if(messagePtr == messages.length) 
           messagePtr--;
@@ -147,6 +145,7 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
     // submitButton
     } else if (e.getSource() == SolveButton) {
 
+        wordsSubmittedArea.append("final score: " + score + "\n");
         wordsSubmittedArea.append("-POSSIBLE WORDS-\n");
         for (String s : board.getPossibleWords()) {
           wordsSubmittedArea.append(s + "\n");
@@ -154,20 +153,34 @@ public class BoggleGameFrame extends JFrame implements ActionListener {
 
         topPanel.remove(SolveButton);
         topPanel.add(newGameButton);
+        inputField.setEditable(false);
         revalidate();
         repaint();
       
     } else if (e.getSource() == newGameButton){
-        board = new BoggleBoard(4);
-        wordsBar.setValue(0);
-        wordsBar.setMaximum(board.getPossibleWords().size());
-        wordsSubmittedArea.setText("");
-        topPanel.remove(newGameButton);
-        topPanel.add(SolveButton);
-        panelGraphic.setBoard(board.getBoard());
-        panelGraphic.paint();
-        boardPanel.revalidate();
-        boardPanel.repaint();
+        newGame();
     }
+  }
+
+  void newGame(){
+    board = new BoggleBoard(4);
+    wordsBar.setValue(0);
+    panelGraphic.setBoard(board.getBoard());
+    panelGraphic.paint();
+    boardPanel.revalidate();
+    boardPanel.repaint();
+    
+    resetElements();
+  }
+  
+  void resetElements(){
+    score = 0;
+    wordsBar.setMaximum(board.getPossibleWords().size());
+    inputField.setEditable(true);
+    topPanel.remove(newGameButton);
+    topPanel.add(SolveButton);
+    wordsSubmittedArea.setText("");
+    messagePtr = 0;
+    colorPtr = 0;
   }
 }

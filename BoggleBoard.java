@@ -16,7 +16,6 @@ public class BoggleBoard {
         dictionary = new Dictionary();
         load();
         findAllPossibleWords();
-        printBoard();
     }
 
     BoggleBoard(int size) {
@@ -59,7 +58,7 @@ public class BoggleBoard {
         for (int row = 0; row < boardSize; row++) {
             for (int col = 0; col < boardSize; col++) {
                 
-                // if there are not dice, go back!
+                // if there are not dice left, wrap around!
                 if (die >= diceArray.size())
                     die = 0;
 
